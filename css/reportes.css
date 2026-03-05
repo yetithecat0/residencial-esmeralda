@@ -1,0 +1,206 @@
+/* 
+  Centro de Transparencia Económica - Residencial Esmeralda
+  Estilo: Minimalista, Profesional, Acordeones Anidados
+*/
+
+.reports-modal {
+    max-width: 800px !important;
+    background: #fdfdfd !important;
+}
+
+.transparency-container {
+    padding: 10px 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+/* Scrollbar Customization */
+.transparency-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.transparency-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.transparency-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* --- ACCORDION SYSTEM --- */
+.accordion-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.3s ease;
+}
+
+.accordion-header:hover {
+    background: #f1f5f9;
+}
+
+.accordion-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.accordion-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+    color: #64748b;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-item.active .accordion-header {
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+}
+
+.accordion-item.active>.accordion-body {
+    max-height: 2000px;
+    /* Large enough to fit content */
+}
+
+/* Nested Accordion Adjustments */
+.nested-accordion {
+    padding: 10px 20px;
+}
+
+.nested-header {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    background: transparent;
+    border-radius: 8px;
+}
+
+/* --- FILE ROWS --- */
+.file-list {
+    padding: 5px 0;
+}
+
+.file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.file-row:last-child {
+    border-bottom: none;
+}
+
+.file-row:hover {
+    background: #f0fdf4;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.file-icon {
+    font-size: 1.1rem;
+}
+
+.file-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+.btn-view-doc {
+    background: transparent;
+    color: #27AE60;
+    border: 1px solid #27AE60;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-view-doc:hover {
+    background: #27AE60;
+    color: white;
+}
+
+/* Specific for "Gastos del Mes" deep nesting */
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.month-item {
+    background: #f1f5f9;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.month-item:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.month-badge {
+    background: #27AE60;
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}

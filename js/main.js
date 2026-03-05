@@ -120,7 +120,8 @@ function initDOMElements() {
             gatekeeper: document.getElementById('modalGatekeeper'),
             voting: document.getElementById('modalVoting'),
             bazar: document.getElementById('modalBazar'),
-            proveedores: document.getElementById('modalProveedores')
+            proveedores: document.getElementById('modalProveedores'),
+            transparency: document.getElementById('modalTransparency')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
@@ -129,6 +130,7 @@ function initDOMElements() {
             closeVoting: document.getElementById('closeVoting'),
             closeBazar: document.getElementById('closeBazar'),
             closeProveedores: document.getElementById('closeProveedores'),
+            closeTransparency: document.getElementById('closeTransparency'),
             unlock: document.getElementById('unlockGatekeeper'),
             logout: document.getElementById('logoutBtn'),
             btnOpenVoting: document.getElementById('btnOpenVoting')
@@ -270,6 +272,8 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openBazarModule();
                 } else if (serviceType === 'proveedores') {
                     openProveedoresModule();
+                } else if (serviceType === 'transparencia') {
+                    openTransparencyModule();
                 } else {
                     if (elements.modals.access) {
                         elements.modals.access.classList.add('active');
@@ -354,6 +358,41 @@ function openProveedoresModule() {
         elements.modals.proveedores.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+}
+
+/**
+ * Abre el módulo de transparencia y configura acordeones
+ */
+function openTransparencyModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.transparency) {
+        elements.modals.transparency.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        initAccordions();
+    }
+}
+
+/**
+ * Lógica de Acordeones
+ */
+function initAccordions() {
+    const headers = document.querySelectorAll('.accordion-header');
+    headers.forEach(header => {
+        // Evitar múltiples bindings
+        header.onclick = (e) => {
+            e.stopPropagation();
+            const item = header.parentElement;
+            const isActive = item.classList.contains('active');
+
+            // Opcional: Cerrar otros del mismo nivel
+            const siblings = item.parentElement.querySelectorAll(':scope > .accordion-item');
+            siblings.forEach(sib => sib.classList.remove('active'));
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        };
+    });
 }
 
 /**
@@ -479,7 +518,8 @@ function setupEventListeners() {
         { btn: buttons.closeGatekeeper, modal: modals.gatekeeper },
         { btn: buttons.closeVoting, modal: modals.voting },
         { btn: buttons.closeBazar, modal: modals.bazar },
-        { btn: buttons.closeProveedores, modal: modals.proveedores }
+        { btn: buttons.closeProveedores, modal: modals.proveedores },
+        { btn: buttons.closeTransparency, modal: modals.transparency }
     ];
 
     closeMapping.forEach(item => {
