@@ -1,0 +1,315 @@
+/* 
+  Portal Residencial Esmeralda - Base & Global Styles
+  Variables, Reset, Typography and General Layout
+*/
+
+:root {
+    /* Color Palette */
+    --color-primary: #27AE60;
+    --color-primary-dark: #1E8449;
+    --color-bg: #F8FAFC;
+    --color-text-main: #1E293B;
+    --color-text-secondary: #64748B;
+    --color-white: #FFFFFF;
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 8rem;
+
+    /* UI Elements */
+    --border-radius: 16px;
+    --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-smooth);
+}
+
+/* Layout Utilities */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    color: var(--color-text-main);
+}
+
+.section-title .divider {
+    width: 40px;
+    height: 4px;
+    background-color: var(--color-primary);
+    margin: 12px auto;
+    border-radius: 2px;
+}
+
+/* --- TOP BAR --- */
+.top-bar {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+    padding: 8px 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* --- UBICACION --- */
+.ubicacion {
+    padding: var(--spacing-lg) 0;
+    background-color: var(--color-bg);
+}
+
+.ubicacion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .ubicacion-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* --- GUIA DE CONVIVENCIA --- */
+.guia {
+    padding: var(--spacing-lg) 0;
+    background-color: var(--color-white);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .info-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.info-item {
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: var(--transition-smooth);
+}
+
+.info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-subtle);
+}
+
+.info-item .icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    display: block;
+}
+
+.info-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.info-item p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+.normas-container {
+    margin-top: var(--spacing-lg);
+}
+
+.normas-container h3.subtitle {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-secondary);
+    font-size: 1.25rem;
+}
+
+.normas-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .normas-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.norma-card {
+    padding: var(--spacing-md);
+    background-color: var(--color-white);
+    border: 1px solid rgba(30, 41, 59, 0.05);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    transition: var(--transition-smooth);
+}
+
+.norma-card:hover {
+    border-color: var(--color-primary);
+}
+
+.norma-card .icon-small {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--color-primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.norma-card h4 {
+    font-size: 1.05rem;
+}
+
+.norma-card p {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* --- FOOTER --- */
+.footer {
+    padding: var(--spacing-lg) 0 var(--spacing-md);
+    background-color: var(--color-white);
+    border-top: 1px solid rgba(30, 41, 59, 0.05);
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: center;
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.footer-info .address {
+    font-weight: 500;
+    color: var(--color-text-main);
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    border-top: 1px solid rgba(30, 41, 59, 0.05);
+    padding-top: var(--spacing-md);
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .footer-info {
+        align-items: flex-start;
+    }
+
+    .copyright {
+        width: auto;
+        border-top: none;
+        padding-top: 0;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-up {
+    animation: fadeInUp 0.8s ease forwards;
+}

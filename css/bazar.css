@@ -1,0 +1,140 @@
+/* 
+  Portal Residencial Esmeralda - Marketplace (Bazar)
+  Professional catalog grid with WhatsApp integration
+*/
+
+.bazar-modal {
+    max-width: 1000px !important;
+    width: 95% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.bazar-banner {
+    background: linear-gradient(90deg, #27AE60 0%, #2ECC71 100%);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.bazar-search-wrapper {
+    margin: 15px auto 0;
+    max-width: 500px;
+}
+
+.bazar-search-input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+    outline: none;
+    text-align: center;
+}
+
+.bazar-search-input:focus {
+    border-color: var(--color-primary);
+}
+
+.bazar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: var(--spacing-md);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Bazar Card Redesign */
+.bazar-card {
+    background: #ffffff;
+    border: 1px solid rgba(30, 41, 59, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-subtle);
+    transition: var(--transition-smooth);
+}
+
+.bazar-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.bazar-card-image {
+    width: 100%;
+    height: 160px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.bazar-card-body {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bazar-user-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bazar-product-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-text-main);
+    margin: 4px 0;
+}
+
+.bazar-product-price {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.btn-whatsapp-bazar {
+    background: #25D366;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+    margin-top: auto;
+}
+
+.btn-whatsapp-bazar:hover {
+    background: #128C7E;
+    color: white;
+}
+
+.loading-bazar {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 600px) {
+    .bazar-grid {
+        grid-template-columns: 1fr;
+    }
+}

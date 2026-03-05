@@ -17,14 +17,20 @@
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Modular Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/carrusel.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/bazar.css">
+    <link rel="stylesheet" href="css/modals.css">
 </head>
 
 <body>
 
 
     <!-- TOP BAR INSTITUCIONAL -->
-    <div class="top-bar">
+    <div id="inicio" class="top-bar">
         <div class="container">
             <span>PORTAL OFICIAL PARA VECINOS Y PROPIETARIOS</span>
             <span class="date">Martes, 24 de Febrero</span>
@@ -41,7 +47,14 @@
                         <span class="district-name">Jesús María, Lima</span>
                     </div>
                 </a>
-                <a href="javascript:void(0)" class="btn-residents secondary-btn" id="openModal">Ingresar</a>
+                <div class="header-user-actions" id="headerUserActions">
+                    <a href="javascript:void(0)" class="btn-residents secondary-btn" id="openModal">Ingresar</a>
+                    <!-- Estado Logueado -->
+                    <div class="logged-user-info" id="loggedUserInfo" style="display: none;">
+                        <span id="userGreeting" class="user-greeting"></span>
+                        <a href="javascript:void(0)" id="logoutBtn" class="logout-link">Cerrar Sesión</a>
+                    </div>
+                </div>
             </div>
             <nav class="institutional-nav">
                 <ul>
@@ -57,7 +70,7 @@
     </header>
 
     <main>
-        <section id="inicio" class="hero institutional-hero">
+        <section class="hero institutional-hero">
             <div class="container animate-up hero-centered">
                 <div class="hero-content">
                     <h1 id="welcomeTitle"><span>Nuestra información </span></h1>
@@ -144,7 +157,7 @@
                         </div>
                     </div>
                     <!-- Servicio 2: Marketplace -->
-                    <div class="service-card blocked" data-service="marketplace">
+                    <div class="service-card blocked" data-service="bazar">
                         <div class="card-content">
                             <div class="icon-box">🛒</div>
                             <h3>Marketplace / Bazar</h3>
@@ -304,7 +317,7 @@
             </div>
             <div class="modal-grid">
                 <!-- Card 1: Votación -->
-                <a href="../Proyecto_3_votacion/index.html" class="app-card">
+                <a href="javascript:void(0)" class="app-card" id="btnOpenVoting">
                     <div class="app-icon">📥</div>
                     <div class="app-info">
                         <h3>Votaciones en Curso</h3>
@@ -324,17 +337,86 @@
         </div>
     </div>
 
+    <!-- MODAL VOTACIONES DE JUNTA -->
+    <div id="modalVoting" class="modal-overlay">
+        <div class="modal-container voting-modal">
+            <button class="modal-close" id="closeVoting">&times;</button>
+            <div class="modal-header">
+                <span class="eyebrow">Participación Ciudadana</span>
+                <h2>Votaciones de Junta</h2>
+                <p>Exclusivo para Propietarios Acreditados</p>
+            </div>
+            <div class="voting-list">
+                <!-- Votación 1: Vigente -->
+                <div class="voting-item active">
+                    <div class="voting-icon">🗳️</div>
+                    <div class="voting-details">
+                        <div class="voting-status success">VIGENTE</div>
+                        <h3>Pintado de Fachada 2026</h3>
+                        <p>Decidamos juntos el nuevo color de nuestra residencial.</p>
+                    </div>
+                    <a href="https://yetithecat0.github.io/votacion-esmeralda/" target="_blank" class="btn-vote">Emitir
+                        Voto</a>
+                </div>
+
+                <!-- Votación 2: Finalizado -->
+                <div class="voting-item closed">
+                    <div class="voting-icon">🗳️</div>
+                    <div class="voting-details">
+                        <div class="voting-status danger">CERRADO</div>
+                        <h3>Aniversario Residencial 2026</h3>
+                        <p>Elección de comité organizador para el evento central.</p>
+                    </div>
+                    <span class="badge-closed">Finalizado</span>
+                </div>
+
+                <!-- Votación 3: Finalizado -->
+                <div class="voting-item closed">
+                    <div class="voting-icon">🗳️</div>
+                    <div class="voting-details">
+                        <div class="voting-status danger">CERRADO</div>
+                        <h3>Evento Día de la Madre</h3>
+                        <p>Definición de presupuesto para el agasajo anual.</p>
+                    </div>
+                    <span class="badge-closed">Finalizado</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BAZAR RESIDENCIAL -->
+    <div id="modalBazar" class="modal-overlay full-modal">
+        <div class="modal-container bazar-modal">
+            <button class="modal-close" id="closeBazar">&times;</button>
+            <div class="bazar-banner">
+                <span>✨ Apoya el Emprendimiento de tus Vecinos</span>
+            </div>
+            <div class="modal-header">
+                <span class="eyebrow">CATÁLOGO VECINAL</span>
+                <h2>Bazar Residencial Esmeralda</h2>
+                <div class="bazar-search-wrapper">
+                    <input type="text" id="bazarSearchInput" placeholder="¿Qué estás buscando hoy?"
+                        class="bazar-search-input">
+                </div>
+            </div>
+            <div class="bazar-grid" id="bazarGrid">
+                <!-- Se cargará mediante JS -->
+                <div class="loading-bazar">Cargando bazar...</div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL GATEKEEPER DE ACCESO -->
     <div id="modalGatekeeper" class="modal-overlay">
         <div class="modal-container gatekeeper-modal">
             <button class="modal-close" id="closeGatekeeper">&times;</button>
             <div class="gatekeeper-content">
                 <div class="gatekeeper-icon">💎</div>
-                <h2>Identifícate, vecino</h2>
-                <p>Ingresa tu Código de Residente Esmeralda para continuar</p>
+                <h2>Acceso Residencial</h2>
+                <p>Ingresa tu Código de Vecino o Contraseña para ingresar</p>
                 <div class="gatekeeper-form">
-                    <input type="text" id="residentCodeInput" class="gatekeeper-input"
-                        placeholder="Ej: P1-975-DNIXXXXX">
+                    <input type="password" id="residentCodeInput" class="gatekeeper-input"
+                        placeholder="Código de Vecino / Token">
                     <div id="accessErrorMsg" class="access-error" style="display: none;"></div>
                     <button class="btn-main btn-full btn-unlock" id="unlockGatekeeper">Desbloquear Portal</button>
                 </div>
@@ -345,6 +427,8 @@
         </div>
     </div>
 
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/main.js"></script>
 </body>
 

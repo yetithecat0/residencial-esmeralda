@@ -11,6 +11,89 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // 2. Elementos del DOM (Globales)
 let elements = {};
 
+const bazarData = [
+    {
+        nombre: "Miguel T.",
+        depto: "403-T1",
+        producto: "Camisetas Deportivas",
+        descripcion: "Camisetas dry-fit de alta calidad, varias tallas.",
+        precio: "S/ 45.00",
+        ícono: "👕"
+    },
+    {
+        nombre: "Lucia V.",
+        depto: "304-T1",
+        producto: "Artículos de Belleza",
+        descripcion: "Maquillaje dermatológico y cuidado facial.",
+        precio: "S/ 25.00",
+        ícono: "💄"
+    },
+    {
+        nombre: "Carmen M.",
+        depto: "901-T2",
+        producto: "Marcianos de Fruta",
+        descripcion: "Maracuyá, Fresa, Lúcuma. 100% fruta natural.",
+        precio: "S/ 2.50",
+        ícono: "🍓"
+    },
+    {
+        nombre: "Roberto C.",
+        depto: "102-T2",
+        producto: "Postres Caseros",
+        descripcion: "Keke de naranja y tartaletas de fresa por porción.",
+        precio: "S/ 12.00",
+        ícono: "🍰"
+    },
+    {
+        nombre: "Elena S.",
+        depto: "505-T1",
+        producto: "Plantas Decorativas",
+        descripcion: "Suculentas y macetas pintadas a mano.",
+        precio: "S/ 18.00",
+        ícono: "🪴"
+    },
+    {
+        nombre: "Javier G.",
+        depto: "208-T2",
+        producto: "Snacks y Frutos Secos",
+        descripcion: "Mix de nueces y almendras tostadas.",
+        precio: "S/ 8.50",
+        ícono: "🥜"
+    },
+    {
+        nombre: "Martha L.",
+        depto: "603-T1",
+        producto: "Manicura y Estética",
+        descripcion: "Servicio a domicilio previo agendamiento.",
+        precio: "S/ 30.00",
+        ícono: "💅"
+    },
+    {
+        nombre: "Carlos B.",
+        depto: "704-T2",
+        producto: "Clases de Matemáticas",
+        descripcion: "Nivel primaria y secundaria. Metodología fácil.",
+        precio: "S/ 25.00 / h",
+        ícono: "📚"
+    },
+    {
+        nombre: "Silvia R.",
+        depto: "802-T1",
+        producto: "Ropa Deportiva",
+        descripcion: "Leggings y tops para yoga y entrenamiento.",
+        precio: "S/ 55.00",
+        ícono: "👟"
+    },
+    {
+        nombre: "David F.",
+        depto: "501-T2",
+        producto: "Paseador de Perros",
+        descripcion: "Rutas seguras y fotos de tu mascota en tiempo real.",
+        precio: "S/ 15.00 / h",
+        ícono: "🐕"
+    }
+];
+
 function initDOMElements() {
     elements = {
         date: document.querySelector('.date'),
@@ -24,14 +107,19 @@ function initDOMElements() {
         },
         modals: {
             access: document.getElementById('modalAccess'),
-            gatekeeper: document.getElementById('modalGatekeeper')
+            gatekeeper: document.getElementById('modalGatekeeper'),
+            voting: document.getElementById('modalVoting'),
+            bazar: document.getElementById('modalBazar')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
             closeAccess: document.getElementById('closeModal'),
             closeGatekeeper: document.getElementById('closeGatekeeper'),
+            closeVoting: document.getElementById('closeVoting'),
+            closeBazar: document.getElementById('closeBazar'),
             unlock: document.getElementById('unlockGatekeeper'),
-            logout: document.getElementById('logoutBtn')
+            logout: document.getElementById('logoutBtn'),
+            btnOpenVoting: document.getElementById('btnOpenVoting')
         },
         ui: {
             welcomeTitle: document.getElementById('welcomeTitle'),
@@ -39,7 +127,9 @@ function initDOMElements() {
             userGreeting: document.getElementById('userGreeting'),
             errorMsg: document.getElementById('accessErrorMsg'),
             codeInput: document.getElementById('residentCodeInput'),
-            serviceCards: document.querySelectorAll('.service-card')
+            serviceCards: document.querySelectorAll('.service-card'),
+            bazarGrid: document.getElementById('bazarGrid'),
+            bazarSearch: document.getElementById('bazarSearchInput')
         }
     };
 }
@@ -106,34 +196,27 @@ function initCommunityCarousel() {
 
 /**
  * Aplica los permisos y actualiza la UI
- * @param {Object} data - Datos del vecino desde Supabase (tabla directorio_final)
- * @param {Boolean} isNewLogin - Si activa animaciones
  */
 function applyUserPermissions(data, isNewLogin = false) {
     if (!data) return;
 
-    // 1. Ajuste de la Interfaz de Usuario (Header)
     const welcomeText = (data.tipo === 'Administración' || data.tipo === 'ADM')
         ? '¡Bienvenido, Administrador Esmeralda!'
         : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
 
-    // Saludo en el Hero
     if (elements.ui.welcomeTitle) {
         elements.ui.welcomeTitle.innerHTML = `<span>${welcomeText}</span>`;
     }
 
-    // Saludo en el Header (Debajo del botón)
     if (elements.ui.userGreeting) {
         elements.ui.userGreeting.textContent = `Hola, ${data.nombre} - Dpto ${data.depto}`;
     }
 
-    // Botón "Mi Cuenta"
     if (elements.buttons.openLogin) {
         elements.buttons.openLogin.textContent = 'Mi Cuenta';
         elements.buttons.openLogin.classList.remove('secondary-btn');
-        elements.buttons.openLogin.classList.add('account-btn'); // Opcional para styling extra
+        elements.buttons.openLogin.classList.add('account-btn');
 
-        // Cambiar comportamiento para abrir modal de apps directamente
         elements.buttons.openLogin.onclick = () => {
             if (elements.modals.access) {
                 elements.modals.access.classList.add('active');
@@ -144,12 +227,10 @@ function applyUserPermissions(data, isNewLogin = false) {
 
     if (elements.ui.loggedInfo) elements.ui.loggedInfo.style.display = 'flex';
 
-    // 2. Lógica de Roles (directorio_final)
     elements.ui.serviceCards.forEach((card, index) => {
         const serviceType = card.getAttribute('data-service');
         let isAllowed = true;
 
-        // Si tipo === 'Propietario', desbloquea todo; Si es 'Inquilino', bloquea 'Votaciones'.
         if (data.tipo?.toLowerCase() === 'inquilino' && serviceType === 'votacion') {
             isAllowed = false;
         }
@@ -157,7 +238,6 @@ function applyUserPermissions(data, isNewLogin = false) {
         if (isAllowed) {
             card.classList.remove('blocked');
 
-            // Animación y limpieza de candados con transición suave
             if (isNewLogin) {
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.classList.add('reveal-card');
@@ -172,20 +252,113 @@ function applyUserPermissions(data, isNewLogin = false) {
             }
 
             card.onclick = () => {
-                if (elements.modals.access) {
-                    elements.modals.access.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+                if (serviceType === 'votacion') {
+                    openVotingModule();
+                } else if (serviceType === 'bazar') {
+                    openBazarModule();
+                } else {
+                    if (elements.modals.access) {
+                        elements.modals.access.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
             };
         } else {
             card.classList.add('blocked');
-            card.onclick = null;
+            card.onclick = () => {
+                if (serviceType === 'votacion') {
+                    showSuttleMessage('Esta sección es exclusiva para Propietarios acreditados');
+                }
+            };
         }
     });
+
+    if (elements.buttons.btnOpenVoting) {
+        elements.buttons.btnOpenVoting.onclick = () => {
+            if (data.tipo?.toLowerCase() === 'propietario' || data.tipo?.toLowerCase() === 'administración' || data.tipo?.toLowerCase() === 'adm') {
+                openVotingModule();
+            } else {
+                showSuttleMessage('Esta sección es exclusiva para Propietarios acreditados');
+            }
+        };
+    }
 }
 
 /**
- * Validación con Supabase (Real Token Logic - directorio_final)
+ * Bazar / Marketplace Logic (Fixed Data)
+ */
+function openBazarModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.bazar) {
+        elements.modals.bazar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        renderBazarCards(bazarData);
+    }
+}
+
+function renderBazarCards(dataList) {
+    if (!elements.ui.bazarGrid) return;
+
+    if (dataList.length === 0) {
+        elements.ui.bazarGrid.innerHTML = '<div class="loading-bazar">No se encontraron emprendimientos con ese criterio.</div>';
+        return;
+    }
+
+    elements.ui.bazarGrid.innerHTML = dataList.map(item => `
+        <div class="bazar-card animate-up">
+            <div class="bazar-card-image">${item.ícono}</div>
+            <div class="bazar-card-body">
+                <span class="bazar-user-tag">${item.nombre} - ${item.depto}</span>
+                <h3 class="bazar-product-title">${item.producto}</h3>
+                <p class="bazar-description">${item.descripcion}</p>
+                <div class="bazar-product-price">${item.precio}</div>
+                <a href="https://wa.me/51900000000?text=Hola%20${item.nombre},%20vi%20tu%20anuncio%20de%20${item.producto}%20en%20el%20Bazar%20Esmeralda" target="_blank" class="btn-whatsapp-bazar">
+                    Contactar por WhatsApp
+                </a>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterBazar() {
+    const query = elements.ui.bazarSearch.value.toLowerCase();
+    const filtered = bazarData.filter(item =>
+        item.producto.toLowerCase().includes(query) ||
+        item.descripcion.toLowerCase().includes(query) ||
+        item.nombre.toLowerCase().includes(query) ||
+        item.depto.toLowerCase().includes(query)
+    );
+    renderBazarCards(filtered);
+}
+
+/**
+ * Abre el módulo de votaciones
+ */
+function openVotingModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.voting) {
+        elements.modals.voting.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+/**
+ * Muestra un mensaje sutil
+ */
+function showSuttleMessage(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'suttle-toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
+
+/**
+ * Validación con Supabase
  */
 async function handleAccessValidation() {
     const inputToken = elements.ui.codeInput.value.trim();
@@ -201,7 +374,6 @@ async function handleAccessValidation() {
     }
 
     try {
-        // Consulta asíncrona a Supabase: directorio_final
         const { data, error } = await supabaseClient
             .from('directorio_final')
             .select('*')
@@ -215,12 +387,9 @@ async function handleAccessValidation() {
         }
 
         if (data) {
-            // Persistencia: guarda la sesión en localStorage
             localStorage.setItem('vecino_logueado', JSON.stringify(data));
-
             applyUserPermissions(data, true);
 
-            // Cierra el modal automáticamente
             if (elements.modals.gatekeeper) {
                 elements.modals.gatekeeper.classList.remove('active');
                 document.body.style.overflow = 'auto';
@@ -271,7 +440,6 @@ function checkExistingSession() {
 function setupEventListeners() {
     const { modals, buttons, ui } = elements;
 
-    // El botón inicial abre el Gatekeeper si no está logueado
     if (buttons.openLogin && modals.gatekeeper) {
         buttons.openLogin.onclick = () => {
             if (!localStorage.getItem('vecino_logueado')) {
@@ -281,24 +449,24 @@ function setupEventListeners() {
         };
     }
 
-    // Cerrar Modales
-    if (buttons.closeAccess && modals.access) {
-        buttons.closeAccess.onclick = () => {
-            modals.access.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        };
-    }
-    if (buttons.closeGatekeeper && modals.gatekeeper) {
-        buttons.closeGatekeeper.onclick = () => {
-            modals.gatekeeper.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        };
-    }
+    const closeMapping = [
+        { btn: buttons.closeAccess, modal: modals.access },
+        { btn: buttons.closeGatekeeper, modal: modals.gatekeeper },
+        { btn: buttons.closeVoting, modal: modals.voting },
+        { btn: buttons.closeBazar, modal: modals.bazar }
+    ];
 
-    // Logout
+    closeMapping.forEach(item => {
+        if (item.btn && item.modal) {
+            item.btn.onclick = () => {
+                item.modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            };
+        }
+    });
+
     if (buttons.logout) buttons.logout.onclick = (e) => { e.preventDefault(); logout(); };
 
-    // Formulario de Acceso
     if (buttons.unlock) buttons.unlock.onclick = (e) => { e.preventDefault(); handleAccessValidation(); };
     if (ui.codeInput) {
         ui.codeInput.addEventListener('keypress', (e) => {
@@ -306,16 +474,21 @@ function setupEventListeners() {
         });
     }
 
-    // Interceptor para tarjetas bloqueadas
+    if (ui.bazarSearch) {
+        ui.bazarSearch.addEventListener('input', filterBazar);
+    }
+
     document.addEventListener('click', (e) => {
         const card = e.target.closest('.service-card.blocked');
         if (card && modals.gatekeeper) {
-            modals.gatekeeper.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            const sessionData = localStorage.getItem('vecino_logueado');
+            if (!sessionData) {
+                modals.gatekeeper.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         }
     });
 
-    // Cerrar modal al hacer clic fuera del contenedor
     Object.values(modals).forEach(modal => {
         if (modal) {
             modal.onclick = (e) => {

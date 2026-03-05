@@ -1,0 +1,138 @@
+/* 
+  Portal Residencial Esmeralda - Header Styles
+  Navigation, User Info, Branding
+*/
+
+header {
+    background: var(--color-white);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--color-primary);
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo-institutional {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-main);
+    line-height: 1;
+    letter-spacing: -0.5px;
+}
+
+.district-name {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.institutional-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 15px;
+}
+
+.institutional-nav ul li a {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: var(--transition-smooth);
+}
+
+.institutional-nav ul li a:hover {
+    color: var(--color-primary);
+}
+
+.btn-residents.secondary-btn {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.btn-residents.secondary-btn:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+}
+
+.header-user-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: -10px;
+}
+
+/* Estado Logueado en Header */
+.logged-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.user-greeting {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.logout-link {
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: var(--transition-smooth);
+}
+
+.logout-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .institutional-nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
