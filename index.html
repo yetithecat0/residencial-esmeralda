@@ -24,7 +24,7 @@
 
 
     <!-- TOP BAR INSTITUCIONAL -->
-    <div class="top-bar">
+    <div id="inicio" class="top-bar">
         <div class="container">
             <span>PORTAL OFICIAL PARA VECINOS Y PROPIETARIOS</span>
             <span class="date">Martes, 24 de Febrero</span>
@@ -41,7 +41,14 @@
                         <span class="district-name">Jesús María, Lima</span>
                     </div>
                 </a>
-                <a href="javascript:void(0)" class="btn-residents secondary-btn" id="openModal">Ingresar</a>
+                <div class="header-user-actions" id="headerUserActions">
+                    <a href="javascript:void(0)" class="btn-residents secondary-btn" id="openModal">Ingresar</a>
+                    <!-- Estado Logueado -->
+                    <div class="logged-user-info" id="loggedUserInfo" style="display: none;">
+                        <span id="userGreeting" class="user-greeting"></span>
+                        <a href="javascript:void(0)" id="logoutBtn" class="logout-link">Cerrar Sesión</a>
+                    </div>
+                </div>
             </div>
             <nav class="institutional-nav">
                 <ul>
@@ -57,7 +64,7 @@
     </header>
 
     <main>
-        <section id="inicio" class="hero institutional-hero">
+        <section class="hero institutional-hero">
             <div class="container animate-up hero-centered">
                 <div class="hero-content">
                     <h1 id="welcomeTitle"><span>Nuestra información </span></h1>
@@ -330,11 +337,11 @@
             <button class="modal-close" id="closeGatekeeper">&times;</button>
             <div class="gatekeeper-content">
                 <div class="gatekeeper-icon">💎</div>
-                <h2>Identifícate, vecino</h2>
-                <p>Ingresa tu Código de Residente Esmeralda para continuar</p>
+                <h2>Acceso Residencial</h2>
+                <p>Ingresa tu Código de Vecino o Contraseña para ingresar</p>
                 <div class="gatekeeper-form">
-                    <input type="text" id="residentCodeInput" class="gatekeeper-input"
-                        placeholder="Ej: P1-975-DNIXXXXX">
+                    <input type="password" id="residentCodeInput" class="gatekeeper-input"
+                        placeholder="Código de Vecino / Token">
                     <div id="accessErrorMsg" class="access-error" style="display: none;"></div>
                     <button class="btn-main btn-full btn-unlock" id="unlockGatekeeper">Desbloquear Portal</button>
                 </div>
@@ -345,6 +352,8 @@
         </div>
     </div>
 
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/main.js"></script>
 </body>
 

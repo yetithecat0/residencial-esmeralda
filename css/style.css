@@ -156,6 +156,53 @@ header {
     color: var(--color-white);
     border: none;
     padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.btn-residents.secondary-btn:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+}
+
+.header-user-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: -10px;
+    /* Evita romper la altura del header */
+}
+
+/* Estado Logueado en Header */
+.logged-user-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.user-greeting {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.logout-link {
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    /* Gris oscuro suave */
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: var(--transition-smooth);
+}
+
+.logout-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
@@ -790,6 +837,29 @@ header {
 
 .service-card.blocked:hover {
     background: #F1F5F9;
+}
+
+/* Animaciones de Desbloqueo */
+.service-card.reveal-card {
+    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.service-card .lock-overlay.fade-out {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+    pointer-events: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* --- GATEKEEPER MODAL --- */
