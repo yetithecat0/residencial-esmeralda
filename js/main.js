@@ -18,7 +18,8 @@ const bazarData = [
         producto: "Camisetas Deportivas",
         descripcion: "Camisetas dry-fit de alta calidad, varias tallas.",
         precio: "S/ 45.00",
-        ícono: "👕"
+        ícono: "👕",
+        categoria: "clothing"
     },
     {
         nombre: "Lucia V.",
@@ -26,7 +27,8 @@ const bazarData = [
         producto: "Artículos de Belleza",
         descripcion: "Maquillaje dermatológico y cuidado facial.",
         precio: "S/ 25.00",
-        ícono: "💄"
+        ícono: "💄",
+        categoria: "beauty"
     },
     {
         nombre: "Carmen M.",
@@ -34,7 +36,8 @@ const bazarData = [
         producto: "Marcianos de Fruta",
         descripcion: "Maracuyá, Fresa, Lúcuma. 100% fruta natural.",
         precio: "S/ 2.50",
-        ícono: "🍓"
+        ícono: "🍓",
+        categoria: "food"
     },
     {
         nombre: "Roberto C.",
@@ -42,7 +45,8 @@ const bazarData = [
         producto: "Postres Caseros",
         descripcion: "Keke de naranja y tartaletas de fresa por porción.",
         precio: "S/ 12.00",
-        ícono: "🍰"
+        ícono: "🍰",
+        categoria: "food"
     },
     {
         nombre: "Elena S.",
@@ -50,7 +54,8 @@ const bazarData = [
         producto: "Plantas Decorativas",
         descripcion: "Suculentas y macetas pintadas a mano.",
         precio: "S/ 18.00",
-        ícono: "🪴"
+        ícono: "🌱",
+        categoria: "garden"
     },
     {
         nombre: "Javier G.",
@@ -58,7 +63,8 @@ const bazarData = [
         producto: "Snacks y Frutos Secos",
         descripcion: "Mix de nueces y almendras tostadas.",
         precio: "S/ 8.50",
-        ícono: "🥜"
+        ícono: "🥜",
+        categoria: "food"
     },
     {
         nombre: "Martha L.",
@@ -66,7 +72,8 @@ const bazarData = [
         producto: "Manicura y Estética",
         descripcion: "Servicio a domicilio previo agendamiento.",
         precio: "S/ 30.00",
-        ícono: "💅"
+        ícono: "💅",
+        categoria: "beauty"
     },
     {
         nombre: "Carlos B.",
@@ -74,7 +81,8 @@ const bazarData = [
         producto: "Clases de Matemáticas",
         descripcion: "Nivel primaria y secundaria. Metodología fácil.",
         precio: "S/ 25.00 / h",
-        ícono: "📚"
+        ícono: "📚",
+        categoria: "services"
     },
     {
         nombre: "Silvia R.",
@@ -82,7 +90,8 @@ const bazarData = [
         producto: "Ropa Deportiva",
         descripcion: "Leggings y tops para yoga y entrenamiento.",
         precio: "S/ 55.00",
-        ícono: "👟"
+        ícono: "👟",
+        categoria: "clothing"
     },
     {
         nombre: "David F.",
@@ -90,7 +99,8 @@ const bazarData = [
         producto: "Paseador de Perros",
         descripcion: "Rutas seguras y fotos de tu mascota en tiempo real.",
         precio: "S/ 15.00 / h",
-        ícono: "🐕"
+        ícono: "🐕",
+        categoria: "services"
     }
 ];
 
@@ -109,7 +119,8 @@ function initDOMElements() {
             access: document.getElementById('modalAccess'),
             gatekeeper: document.getElementById('modalGatekeeper'),
             voting: document.getElementById('modalVoting'),
-            bazar: document.getElementById('modalBazar')
+            bazar: document.getElementById('modalBazar'),
+            proveedores: document.getElementById('modalProveedores')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
@@ -117,6 +128,7 @@ function initDOMElements() {
             closeGatekeeper: document.getElementById('closeGatekeeper'),
             closeVoting: document.getElementById('closeVoting'),
             closeBazar: document.getElementById('closeBazar'),
+            closeProveedores: document.getElementById('closeProveedores'),
             unlock: document.getElementById('unlockGatekeeper'),
             logout: document.getElementById('logoutBtn'),
             btnOpenVoting: document.getElementById('btnOpenVoting')
@@ -256,6 +268,8 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openVotingModule();
                 } else if (serviceType === 'bazar') {
                     openBazarModule();
+                } else if (serviceType === 'proveedores') {
+                    openProveedoresModule();
                 } else {
                     if (elements.modals.access) {
                         elements.modals.access.classList.add('active');
@@ -305,7 +319,7 @@ function renderBazarCards(dataList) {
     }
 
     elements.ui.bazarGrid.innerHTML = dataList.map(item => `
-        <div class="bazar-card animate-up">
+        <div class="bazar-card category-${item.categoria} animate-up">
             <div class="bazar-card-image">${item.ícono}</div>
             <div class="bazar-card-body">
                 <span class="bazar-user-tag">${item.nombre} - ${item.depto}</span>
@@ -329,6 +343,17 @@ function filterBazar() {
         item.depto.toLowerCase().includes(query)
     );
     renderBazarCards(filtered);
+}
+
+/**
+ * Abre el módulo de proveedores
+ */
+function openProveedoresModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.proveedores) {
+        elements.modals.proveedores.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 /**
@@ -453,7 +478,8 @@ function setupEventListeners() {
         { btn: buttons.closeAccess, modal: modals.access },
         { btn: buttons.closeGatekeeper, modal: modals.gatekeeper },
         { btn: buttons.closeVoting, modal: modals.voting },
-        { btn: buttons.closeBazar, modal: modals.bazar }
+        { btn: buttons.closeBazar, modal: modals.bazar },
+        { btn: buttons.closeProveedores, modal: modals.proveedores }
     ];
 
     closeMapping.forEach(item => {
