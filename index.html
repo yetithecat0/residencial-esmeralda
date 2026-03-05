@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Residencial Esmeralda | Portal de Convivencia</title>
+    <meta name="description"
+        content="Portal oficial del Residencial Esmeralda. Gestión moderna, transparente y eficiente para nuestra comunidad.">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/logos/favicon.png">
+    <!-- Fallback SVG Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+
+    <!-- TOP BAR INSTITUCIONAL -->
+    <div class="top-bar">
+        <div class="container">
+            <span>PORTAL OFICIAL PARA VECINOS Y PROPIETARIOS</span>
+            <span class="date">Martes, 24 de Febrero</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="main-header">
+                <a href="#" class="logo-institutional">
+                    <img src="assets/logos/logo.png" alt="Logo Esmeralda" class="header-logo-img">
+                    <div class="logo-text">
+                        <span class="brand-name">RESIDENCIAL ESMERALDA</span>
+                        <span class="district-name">Jesús María, Lima</span>
+                    </div>
+                </a>
+                <a href="javascript:void(0)" class="btn-residents secondary-btn" id="openModal">Ingresar</a>
+            </div>
+            <nav class="institutional-nav">
+                <ul>
+                    <li><a href="#inicio">INICIO</a></li>
+                    <li><a href="#avisos">AVISOS</a></li>
+                    <li><a href="#servicios">SERVICIOS</a></li>
+                    <li><a href="#normas">NORMAS</a></li>
+                    <li><a href="#distrito">DISTRITO</a></li>
+                    <li><a href="#contacto">CONTACTO</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero institutional-hero">
+            <div class="container animate-up hero-centered">
+                <div class="hero-content">
+                    <h1 id="welcomeTitle"><span>Nuestra información </span></h1>
+                    <p>La Esmeralda es un condominio residencial ubicado en la cuadra 9 de la Av. Brasil, en el
+                        prestigioso distrito de Jesús María. Edificada en el año 2010, cuenta con 180 departamentos de
+                        80m2 organizados en 03 Torres. Cuenta con dos accesos peatonales, siendo el ingreso principal
+                        por la Av. Brasil 973 y como segunda puerta por Jr. Canterac. Personal de seguridad las 24 hrs.
+                        y un sistema de cámaras de seguridad en circuito cerrado. Los vecinos nos encontramos
+                        debidamente representados por una Junta directiva inscrita en registros públicos. La oficina de
+                        administración de nuestra residencial es la encargada de gestionar la comunicación, pagos y
+                        resolver todas las inquietudes de nuestros vecinos. De esta forma logramos trabajar en conjunto
+                        para desarrollar esta plataforma digital para una mejor convivencia comunitaria.</p>
+
+
+                    <div class="cta-group">
+                        <a href="#distrito" class="btn-main">Explorar Portal</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- MURAL INFORMATIVO (COMUNIDAD) -->
+        <section id="avisos" class="mural-informativo">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">Mural Informativo</span>
+                    <h2>Próximas actividades</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="carousel-wrapper">
+                    <div class="carousel-container" id="carousel">
+                        <div class="carousel-track">
+                            <!-- Slide 1: Fumigación -->
+                            <div class="carousel-slide">
+                                <img src="assets/img/aviso1.png" alt="Aviso Próxima Fumigación" class="carousel-image">
+                            </div>
+                            <!-- Slide 2: Taller de Pintura -->
+                            <div class="carousel-slide">
+                                <img src="assets/img/aviso2.png" alt="Taller de Pintura para Niños"
+                                    class="carousel-image">
+                            </div>
+                            <!-- Slide 3: Mantenimiento Ascensores -->
+                            <div class="carousel-slide">
+                                <img src="assets/img/aviso3.png" alt="Mantenimiento de Ascensores"
+                                    class="carousel-image">
+                            </div>
+                        </div>
+
+                        <!-- Controles: Flechas -->
+                        <button class="carousel-btn prev" id="prevBtn">&#10094;</button>
+                        <button class="carousel-btn next" id="nextBtn">&#10095;</button>
+
+                        <!-- Puntos Indicadores (Dots) -->
+                        <div class="carousel-dots" id="dotsContainer">
+                            <span class="dot active" data-index="0"></span>
+                            <span class="dot" data-index="1"></span>
+                            <span class="dot" data-index="2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicios" class="services-dashboard">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">Servicios Internos</span>
+                    <h2>¡Comienza ahora!</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="services-grid">
+                    <!-- Servicio 1: Votaciones -->
+                    <div class="service-card blocked" data-service="votacion">
+                        <div class="card-content">
+                            <div class="icon-box">🗳️</div>
+                            <h3>Votaciones de Junta</h3>
+                            <p>Exclusivo para propietarios: Participa en las decisiones clave de la comunidad.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 2: Marketplace -->
+                    <div class="service-card blocked" data-service="marketplace">
+                        <div class="card-content">
+                            <div class="icon-box">🛒</div>
+                            <h3>Marketplace / Bazar</h3>
+                            <p>Comunidad: Espacio seguro para compra, venta e intercambio vecinal.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 3: Proveedores -->
+                    <div class="service-card blocked" data-service="proveedores">
+                        <div class="card-content">
+                            <div class="icon-box">🛠️</div>
+                            <h3>Directorio de Proveedores</h3>
+                            <p>Servicios técnicos recomendados: Gasfitería, electricidad y más.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 4: Intercomunicador -->
+                    <div class="service-card blocked" data-service="intercom">
+                        <div class="card-content">
+                            <div class="icon-box">📞</div>
+                            <h3>Intercomunicador Digital</h3>
+                            <p>Portería: Comunicación en tiempo real con recepción desde tu móvil.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 5: Transparencia -->
+                    <div class="service-card blocked" data-service="transparencia">
+                        <div class="card-content">
+                            <div class="icon-box">📊</div>
+                            <h3>Reportes de Transparencia</h3>
+                            <p>Administración: Gestión de gastos, ingresos y rendición de cuentas.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="normas" class="guia">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Vecino Ejemplar</h2>
+                    <div class="divider"></div>
+                    <p>En la Residencial Esmeralda, la convivencia se construye entre todos. Conoce las normas que nos
+                        ayudan a vivir en armonía y descubre cómo tu participación fortalece nuestra comunidad.</p>
+                </div>
+
+                <!-- Información General -->
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="icon">🕒</span>
+                        <h3>Ajustes y Reparaciones<br>Ruidosas</h3>
+                        <p>Lun-Sab 9:00 - 16:00 hrs.</p>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon">🔇</span>
+                        <h3>Volumen Moderado</h3>
+                        <p>cumpleaños, celebraciones y reuniones<br> después de las 23:59 hrs</p>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon">🛡️</span>
+                        <h3>Acceso a Cochera</h3>
+                        <p>Comunicarse con el personal de vigilancia<br>Prohibido tocar bocina / claxon</p>
+                    </div>
+                </div>
+
+                <!-- Normas Destacadas -->
+                <div class="normas-container">
+                    <h3 class="subtitle">Normas Destacadas</h3>
+                    <div class="normas-grid">
+                        <div class="norma-card">
+                            <div class="icon-small">🗑️</div>
+                            <h4>Residuos</h4>
+                            <p>Utilizar doble bolsa para evitar derrames involuntarios</p>
+                        </div>
+                        <div class="norma-card">
+                            <div class="icon-small">🐾</div>
+                            <h4>Mascotas</h4>
+                            <p>Uso obligatorio de correa y limpieza de desechos.</p>
+                        </div>
+                        <div class="norma-card">
+                            <div class="icon-small">📦</div>
+                            <h4>Mudanzas</h4>
+                            <p>Lun-Sab 9:00 - 16:00 hrs.<br>Coordinar con administración 48h antes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="distrito" class="ubicacion">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Nuestro Distrito<br> Jesús María</h2>
+                    <div class="divider"></div>
+                    <p>Conecta con toda la ciudad en minutos a través de las avenidas Brasil y Salaverry, y disfruta de
+                        vivir a un paso de los mejores centros comerciales y del Centro Cultural Peruano Japonés. Es el
+                        distrito perfecto para quienes quieren estar cerca de su trabajo en el centro o San Isidro, pero
+                        valoran volver a un hogar tranquilo y seguro. Dale a tu vida el espacio que necesita en el
+                        distrito
+                        con más proyección de Lima. ¡Jesús María te espera, descúbrelo hoy!</p>
+                </div>
+                <div class="ubicacion-grid">
+                    <div class="norma-card">
+                        <div class="icon-small">🌳</div>
+                        <h4>Entorno Verde</h4>
+                        <p>Cercanía a los mejores parques del distrito para tu bienestar.</p>
+                    </div>
+                    <div class="norma-card">
+                        <div class="icon-small">🛍️</div>
+                        <h4>Servicios</h4>
+                        <p>A pasos de centros comerciales, bancos y restaurantes premium.</p>
+                    </div>
+                    <div class="norma-card">
+                        <div class="icon-small">🚗</div>
+                        <h4>Conectividad</h4>
+                        <p>Ubicación estratégica con acceso rápido a las principales vías.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p class="address">Residencial Esmeralda, AV. Brasil 973, Jesús María, Lima - Perú</p>
+                    <p class="correo">residencialesmeralda2023@gmail.com</p>
+                    <p class="telefono">+51 978 929 316</p>
+
+                </div>
+                <p class="copyright">&copy; 2026 Residencial Esmeralda. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL ACCESO RESIDENTES -->
+    <div id="modalAccess" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header">
+                <h2>Portal Residentes</h2>
+                <p>Seleccione el servicio que desea utilizar</p>
+            </div>
+            <div class="modal-grid">
+                <!-- Card 1: Votación -->
+                <a href="../Proyecto_3_votacion/index.html" class="app-card">
+                    <div class="app-icon">📥</div>
+                    <div class="app-info">
+                        <h3>Votaciones en Curso</h3>
+                        <p>Participa en las decisiones de nuestra comunidad</p>
+                    </div>
+                </a>
+                <!-- Card 2: Reservas (Coming Soon) -->
+                <div class="app-card disabled">
+                    <div class="app-badge">Próximamente</div>
+                    <div class="app-icon">📅</div>
+                    <div class="app-info">
+                        <h3>Áreas Comunes</h3>
+                        <p>Reserva la zona de parrillas o el salón de eventos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GATEKEEPER DE ACCESO -->
+    <div id="modalGatekeeper" class="modal-overlay">
+        <div class="modal-container gatekeeper-modal">
+            <button class="modal-close" id="closeGatekeeper">&times;</button>
+            <div class="gatekeeper-content">
+                <div class="gatekeeper-icon">💎</div>
+                <h2>Identifícate, vecino</h2>
+                <p>Ingresa tu Código de Residente Esmeralda para continuar</p>
+                <div class="gatekeeper-form">
+                    <input type="text" id="residentCodeInput" class="gatekeeper-input"
+                        placeholder="Ej: P1-975-DNIXXXXX">
+                    <div id="accessErrorMsg" class="access-error" style="display: none;"></div>
+                    <button class="btn-main btn-full btn-unlock" id="unlockGatekeeper">Desbloquear Portal</button>
+                </div>
+                <div class="gatekeeper-footer">
+                    <a href="#" class="help-link">¿No tienes tu código? Contacta a Administración</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
