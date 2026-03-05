@@ -1,0 +1,23 @@
+ESTRUCTURA DE RECURSOS - RESIDENCIAL ESMERALDA
+===========================================
+
+Para que el diseño reconozca tus archivos automáticamente, por favor renómbralos y colócalos en las siguientes carpetas:
+
+/assets/logos/
+-------------
+1. favicon.ico          - El icono de la pestaña del navegador.
+2. logo-principal.png   - El logo que aparecerá en el Header (Opcional, ahora usa texto).
+
+/assets/img/
+------------
+1. fachada-residencial.jpg - Foto principal para secciones visuales.
+2. jesus-maria-distrito.jpg- Foto del entorno de Jesús María.
+3. hero-bg.jpg             - Imagen de fondo para el Hero (si decides no usar solo video).
+
+/assets/icons/
+--------------
+1. icon-votacion.svg    - Icono personalizado para el módulo de votación.
+2. icon-reservas.svg    - Icono personalizado para áreas comunes.
+3. icon-seguridad.svg   - Icono para la sección de información.
+
+Nota: Mantén las extensiones (.jpg, .png, .svg) tal como se indican para evitar errores de carga.
