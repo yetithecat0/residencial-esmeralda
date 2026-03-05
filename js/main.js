@@ -122,7 +122,9 @@ function initDOMElements() {
             bazar: document.getElementById('modalBazar'),
             proveedores: document.getElementById('modalProveedores'),
             transparency: document.getElementById('modalTransparency'),
-            account: document.getElementById('modalAccount')
+            account: document.getElementById('modalAccount'),
+            events: document.getElementById('modalEvents'),
+            tickets: document.getElementById('modalTickets')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
@@ -133,6 +135,8 @@ function initDOMElements() {
             closeProveedores: document.getElementById('closeProveedores'),
             closeTransparency: document.getElementById('closeTransparency'),
             closeAccount: document.getElementById('closeAccount'),
+            closeEvents: document.getElementById('closeEvents'),
+            closeTickets: document.getElementById('closeTickets'),
             unlock: document.getElementById('unlockGatekeeper'),
             logout: document.getElementById('logoutBtn'),
             btnOpenVoting: document.getElementById('btnOpenVoting')
@@ -145,7 +149,8 @@ function initDOMElements() {
             codeInput: document.getElementById('residentCodeInput'),
             serviceCards: document.querySelectorAll('.service-card'),
             bazarGrid: document.getElementById('bazarGrid'),
-            bazarSearch: document.getElementById('bazarSearchInput')
+            bazarSearch: document.getElementById('bazarSearchInput'),
+            claimForm: document.getElementById('claimForm')
         }
     };
 }
@@ -266,15 +271,19 @@ function applyUserPermissions(data, isNewLogin = false) {
             isAllowed = true;
             isHidden = false;
         } else if (isConserje) {
-            // Conserje solo ve Intercom, Bazar y Proveedores
-            const allowedForConserje = ['intercom', 'bazar', 'proveedores'];
+            // Conserje solo ve lo operativo + eventos + reclamos (aunque deshabilitado)
+            const allowedForConserje = ['intercom', 'bazar', 'proveedores', 'eventos', 'reclamos'];
             if (!allowedForConserje.includes(serviceType)) {
                 isHidden = true;
+            }
+            if (serviceType === 'reclamos') {
+                isConserjeOnlyRestriction = true;
+                isAllowed = false;
             }
         } else if (userType === 'propietario' || userType === 'inquilino') {
             // Residentes no usan el Intercom
             if (serviceType === 'intercom') {
-                isConserjeOnlyRestriction = true;
+                isConserjeOnlyRestriction = true; // Mostramos el mismo estilo de "Portería"
                 isAllowed = false;
             }
             // Inquilinos no votan
@@ -329,6 +338,10 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openProveedoresModule();
                 } else if (serviceType === 'transparencia') {
                     openTransparencyModule();
+                } else if (serviceType === 'eventos') {
+                    openEventsModule();
+                } else if (serviceType === 'reclamos') {
+                    openTicketsModule();
                 } else if (serviceType === 'intercom' && (isConserje || isSuper || isAdmin)) {
                     window.open('https://intercomweb2026.streamlit.app/', '_blank');
                 } else {
@@ -463,6 +476,50 @@ function openVotingModule() {
 }
 
 /**
+ * Módulos de Actividades y Tickets
+ */
+function openEventsModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.events) {
+        elements.modals.events.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function openTicketsModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.tickets) {
+        // Reset form state
+        document.getElementById('ticketFormContainer').style.display = 'block';
+        document.getElementById('ticketSuccess').style.display = 'none';
+        if (elements.ui.claimForm) elements.ui.claimForm.reset();
+
+        elements.modals.tickets.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function handleTicketSubmission(e) {
+    e.preventDefault();
+    const type = document.getElementById('ticketType').value;
+    const desc = document.getElementById('ticketDesc').value;
+
+    if (!type || !desc) return;
+
+    // Generar ticket aleatorio
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const ticketID = `#RE-${randomNum}`;
+
+    // Simular envío
+    document.getElementById('ticketFormContainer').style.display = 'none';
+    const successDiv = document.getElementById('ticketSuccess');
+    successDiv.style.display = 'block';
+    document.getElementById('ticketGeneratedNumber').textContent = ticketID;
+
+    console.log(`Ticket Generado: ${ticketID} | Tipo: ${type} | Desc: ${desc}`);
+}
+
+/**
  * Muestra un mensaje sutil
  */
 function showSuttleMessage(msg) {
@@ -593,7 +650,9 @@ function setupEventListeners() {
         { btn: buttons.closeBazar, modal: modals.bazar },
         { btn: buttons.closeProveedores, modal: modals.proveedores },
         { btn: buttons.closeTransparency, modal: modals.transparency },
-        { btn: buttons.closeAccount, modal: modals.account }
+        { btn: buttons.closeAccount, modal: modals.account },
+        { btn: buttons.closeEvents, modal: modals.events },
+        { btn: buttons.closeTickets, modal: modals.tickets }
     ];
 
     closeMapping.forEach(item => {
@@ -616,6 +675,10 @@ function setupEventListeners() {
 
     if (ui.bazarSearch) {
         ui.bazarSearch.addEventListener('input', filterBazar);
+    }
+
+    if (ui.claimForm) {
+        ui.claimForm.addEventListener('submit', handleTicketSubmission);
     }
 
     document.addEventListener('click', (e) => {

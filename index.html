@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/proveedores.css">
     <link rel="stylesheet" href="css/reportes.css">
+    <link rel="stylesheet" href="css/eventos_reclamos.css">
 </head>
 
 <body>
@@ -204,6 +205,30 @@
                         <div class="lock-overlay">
                             <span class="lock-icon">🔒</span>
                             <span class="lock-text">Exclusivo para Propietarios</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 6: Eventos -->
+                    <div class="service-card blocked" data-service="eventos">
+                        <div class="card-content">
+                            <div class="icon-box">📅</div>
+                            <h3>Actividades y Eventos</h3>
+                            <p>Comunidad: Participa de las actividades programadas para cada semana.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Libre Acceso Vecinal</span>
+                        </div>
+                    </div>
+                    <!-- Servicio 7: Reclamos -->
+                    <div class="service-card blocked" data-service="reclamos">
+                        <div class="card-content">
+                            <div class="icon-box">📣</div>
+                            <h3>Reclamos y Observaciones</h3>
+                            <p>Gestión: Genera un ticket detallando tu inquietud para administración.</p>
+                        </div>
+                        <div class="lock-overlay">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Exclusivo para Residentes</span>
                         </div>
                     </div>
                 </div>
@@ -899,6 +924,82 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ACTIVIDADES Y EVENTOS -->
+    <div id="modalEvents" class="modal-overlay">
+        <div class="modal-container gatekeeper-modal">
+            <button class="modal-close" id="closeEvents">&times;</button>
+            <div class="modal-header">
+                <span class="eyebrow">Agenda Semanal</span>
+                <h2>Actividades y Eventos</h2>
+                <p>Mantente al día con lo que sucede en la Residencial Esmeralda.</p>
+            </div>
+            <div class="events-list">
+                <div class="event-item">
+                    <span class="event-time">Lun 6:00 PM</span>
+                    <div class="event-details">
+                        <h4>Yoga en la Terraza</h4>
+                        <p>Trae tu mat y disfruta de una sesión de relajación al aire libre.</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-time">Mie 10:00 AM</span>
+                    <div class="event-details">
+                        <h4>Mantenimiento de Ascensores</h4>
+                        <p>Aviso: Servicio preventivo en Torre 1. Tome sus precauciones.</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-time">Sab 4:00 PM</span>
+                    <div class="event-details">
+                        <h4>Cine para Niños</h4>
+                        <p>Función especial en el salón comunal. ¡Gratis para todos!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RECLAMOS Y TICKETS -->
+    <div id="modalTickets" class="modal-overlay">
+        <div class="modal-container gatekeeper-modal">
+            <button class="modal-close" id="closeTickets">&times;</button>
+            <div id="ticketFormContainer">
+                <div class="modal-header">
+                    <span class="eyebrow">Atención al Vecino</span>
+                    <h2>Generar Nuevo Ticket</h2>
+                    <p>Cuéntanos tu inquietud para que nuestro equipo pueda ayudarte.</p>
+                </div>
+                <form class="ticket-form" id="claimForm">
+                    <div class="form-group">
+                        <label>Tipo de Incidencia</label>
+                        <select class="form-control" id="ticketType" required>
+                            <option value="">Seleccione una opción...</option>
+                            <option value="Limpieza">🧹 Limpieza</option>
+                            <option value="Seguridad">🛡️ Seguridad</option>
+                            <option value="Ruidos">🔊 Ruidos</option>
+                            <option value="Otros">❓ Otros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción del Problema</label>
+                        <textarea class="form-control" id="ticketDesc" placeholder="Describe brevemente lo sucedido..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit-ticket">Enviar Reporte</button>
+                </form>
+            </div>
+            <!-- Éxito (Oculto inicialmente) -->
+            <div id="ticketSuccess" class="ticket-success">
+                <span class="success-icon">✅</span>
+                <h2>¡Reporte Enviado!</h2>
+                <p>Tu inquietud ha sido registrada con éxito bajo el código:</p>
+                <div class="ticket-number" id="ticketGeneratedNumber">#RE-0000</div>
+                <p style="color: #64748b; font-size: 0.9rem;">La administración revisará tu caso y se pondrá en contacto
+                    contigo a la brevedad.</p>
             </div>
         </div>
     </div>
