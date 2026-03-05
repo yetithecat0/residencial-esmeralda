@@ -121,7 +121,8 @@ function initDOMElements() {
             voting: document.getElementById('modalVoting'),
             bazar: document.getElementById('modalBazar'),
             proveedores: document.getElementById('modalProveedores'),
-            transparency: document.getElementById('modalTransparency')
+            transparency: document.getElementById('modalTransparency'),
+            account: document.getElementById('modalAccount')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
@@ -131,6 +132,7 @@ function initDOMElements() {
             closeBazar: document.getElementById('closeBazar'),
             closeProveedores: document.getElementById('closeProveedores'),
             closeTransparency: document.getElementById('closeTransparency'),
+            closeAccount: document.getElementById('closeAccount'),
             unlock: document.getElementById('unlockGatekeeper'),
             logout: document.getElementById('logoutBtn'),
             btnOpenVoting: document.getElementById('btnOpenVoting')
@@ -217,31 +219,33 @@ function applyUserPermissions(data, isNewLogin = false) {
     const userType = data.tipo?.toLowerCase();
     const isConserje = userType === 'conserje';
     const isAdmin = userType === 'administración' || userType === 'adm';
+    const isSuper = userType === 'super';
 
-    const welcomeText = isAdmin
-        ? '¡Bienvenido, Administrador Esmeralda!'
-        : isConserje
-            ? `Hola, ${data.nombre} - Conserje`
-            : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
+    // Saludo Personalizado
+    let welcomeText = isAdmin ? '¡Bienvenido, Administrador Esmeralda!' : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
+    if (isConserje) welcomeText = `Hola, ${data.nombre} - Conserje`;
+    if (isSuper) welcomeText = `Hola, ${data.nombre} - Desarrollador`;
 
     if (elements.ui.welcomeTitle) {
         elements.ui.welcomeTitle.innerHTML = `<span>${welcomeText}</span>`;
     }
 
     if (elements.ui.userGreeting) {
-        elements.ui.userGreeting.textContent = isConserje
-            ? `Hola, ${data.nombre} - Conserje`
-            : `Hola, ${data.nombre} - Dpto ${data.depto}`;
+        elements.ui.userGreeting.textContent = isConserje ? `Hola, ${data.nombre} - Conserje` :
+            isSuper ? `Hola, ${data.nombre} - Desarrollador` :
+                `Hola, ${data.nombre} - Dpto ${data.depto}`;
     }
 
+    // Botón Mi Cuenta (Funcional ahora)
     if (elements.buttons.openLogin) {
         elements.buttons.openLogin.textContent = isConserje ? 'Panel Conserje' : 'Mi Cuenta';
         elements.buttons.openLogin.classList.remove('secondary-btn');
         elements.buttons.openLogin.classList.add('account-btn');
 
-        elements.buttons.openLogin.onclick = () => {
-            if (elements.modals.access) {
-                elements.modals.access.classList.add('active');
+        elements.buttons.openLogin.onclick = (e) => {
+            e.preventDefault();
+            if (elements.modals.account) {
+                elements.modals.account.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
         };
@@ -253,19 +257,24 @@ function applyUserPermissions(data, isNewLogin = false) {
         const serviceType = card.getAttribute('data-service');
         let isAllowed = true;
         let isHidden = false;
-        let isConserjeOnly = false;
+        let isConserjeOnlyRestriction = false;
 
-        // Lógica de Roles
-        if (isConserje) {
+        // --- Lógica de Roles ---
+
+        if (isSuper) {
+            // Super tiene acceso total
+            isAllowed = true;
+            isHidden = false;
+        } else if (isConserje) {
             // Conserje solo ve Intercom, Bazar y Proveedores
             const allowedForConserje = ['intercom', 'bazar', 'proveedores'];
             if (!allowedForConserje.includes(serviceType)) {
                 isHidden = true;
             }
         } else if (userType === 'propietario' || userType === 'inquilino') {
-            // Residentes no usan el Intercom (es herramienta de portería)
+            // Residentes no usan el Intercom
             if (serviceType === 'intercom') {
-                isConserjeOnly = true;
+                isConserjeOnlyRestriction = true;
                 isAllowed = false;
             }
             // Inquilinos no votan
@@ -282,8 +291,8 @@ function applyUserPermissions(data, isNewLogin = false) {
             card.classList.remove('hidden-role');
         }
 
-        // Aplicar estado "Solo Conserje" (Tooltip CSS)
-        if (isConserjeOnly) {
+        // Aplicar Restricción "Solo Conserje"
+        if (isConserjeOnlyRestriction) {
             card.classList.add('conserje-only');
             card.classList.remove('blocked');
             const overlay = card.querySelector('.lock-overlay');
@@ -294,6 +303,7 @@ function applyUserPermissions(data, isNewLogin = false) {
             card.classList.remove('conserje-only');
         }
 
+        // --- Manejo de Desbloqueo y Clics ---
         if (isAllowed) {
             card.classList.remove('blocked');
 
@@ -319,13 +329,11 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openProveedoresModule();
                 } else if (serviceType === 'transparencia') {
                     openTransparencyModule();
-                } else if (serviceType === 'intercom' && (isConserje || isAdmin)) {
+                } else if (serviceType === 'intercom' && (isConserje || isSuper || isAdmin)) {
                     window.open('https://intercomweb2026.streamlit.app/', '_blank');
                 } else {
-                    if (elements.modals.access) {
-                        elements.modals.access.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
+                    // Otros servicios (si los hubiera)
+                    showSuttleMessage('Módulo en mantenimiento preventivo.');
                 }
             };
         } else {
@@ -341,7 +349,7 @@ function applyUserPermissions(data, isNewLogin = false) {
 
     if (elements.buttons.btnOpenVoting) {
         elements.buttons.btnOpenVoting.onclick = () => {
-            if (data.tipo?.toLowerCase() === 'propietario' || isAdmin) {
+            if (userType === 'propietario' || isAdmin || isSuper) {
                 openVotingModule();
             } else {
                 showSuttleMessage('Esta sección es exclusiva para Propietarios acreditados');
@@ -486,6 +494,20 @@ async function handleAccessValidation() {
     }
 
     try {
+        // Excepción Global para Super Usuario (Token Bypass)
+        if (inputToken === '00000000') {
+            const superData = {
+                nombre: "Admin Dev",
+                depto: "Labs",
+                tipo: "super",
+                token: "00000000"
+            };
+            localStorage.setItem('vecino_logueado', JSON.stringify(superData));
+            applyUserPermissions(superData, true);
+            closeGatekeeperLogic();
+            return;
+        }
+
         const { data, error } = await supabaseClient
             .from('directorio_final')
             .select('*')
@@ -501,12 +523,7 @@ async function handleAccessValidation() {
         if (data) {
             localStorage.setItem('vecino_logueado', JSON.stringify(data));
             applyUserPermissions(data, true);
-
-            if (elements.modals.gatekeeper) {
-                elements.modals.gatekeeper.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-            elements.ui.codeInput.value = '';
+            closeGatekeeperLogic();
         }
     } catch (err) {
         console.error('Supabase Error:', err);
@@ -517,6 +534,14 @@ async function handleAccessValidation() {
             unlockBtn.textContent = 'Desbloquear Portal';
         }
     }
+}
+
+function closeGatekeeperLogic() {
+    if (elements.modals.gatekeeper) {
+        elements.modals.gatekeeper.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    if (elements.ui.codeInput) elements.ui.codeInput.value = '';
 }
 
 function showAccessError(msg) {
@@ -567,7 +592,8 @@ function setupEventListeners() {
         { btn: buttons.closeVoting, modal: modals.voting },
         { btn: buttons.closeBazar, modal: modals.bazar },
         { btn: buttons.closeProveedores, modal: modals.proveedores },
-        { btn: buttons.closeTransparency, modal: modals.transparency }
+        { btn: buttons.closeTransparency, modal: modals.transparency },
+        { btn: buttons.closeAccount, modal: modals.account }
     ];
 
     closeMapping.forEach(item => {
