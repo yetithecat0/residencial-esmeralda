@@ -214,20 +214,28 @@ function initCommunityCarousel() {
 function applyUserPermissions(data, isNewLogin = false) {
     if (!data) return;
 
-    const welcomeText = (data.tipo === 'Administración' || data.tipo === 'ADM')
+    const userType = data.tipo?.toLowerCase();
+    const isConserje = userType === 'conserje';
+    const isAdmin = userType === 'administración' || userType === 'adm';
+
+    const welcomeText = isAdmin
         ? '¡Bienvenido, Administrador Esmeralda!'
-        : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
+        : isConserje
+            ? `Hola, ${data.nombre} - Conserje`
+            : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
 
     if (elements.ui.welcomeTitle) {
         elements.ui.welcomeTitle.innerHTML = `<span>${welcomeText}</span>`;
     }
 
     if (elements.ui.userGreeting) {
-        elements.ui.userGreeting.textContent = `Hola, ${data.nombre} - Dpto ${data.depto}`;
+        elements.ui.userGreeting.textContent = isConserje
+            ? `Hola, ${data.nombre} - Conserje`
+            : `Hola, ${data.nombre} - Dpto ${data.depto}`;
     }
 
     if (elements.buttons.openLogin) {
-        elements.buttons.openLogin.textContent = 'Mi Cuenta';
+        elements.buttons.openLogin.textContent = isConserje ? 'Panel Conserje' : 'Mi Cuenta';
         elements.buttons.openLogin.classList.remove('secondary-btn');
         elements.buttons.openLogin.classList.add('account-btn');
 
@@ -244,9 +252,46 @@ function applyUserPermissions(data, isNewLogin = false) {
     elements.ui.serviceCards.forEach((card, index) => {
         const serviceType = card.getAttribute('data-service');
         let isAllowed = true;
+        let isHidden = false;
+        let isConserjeOnly = false;
 
-        if (data.tipo?.toLowerCase() === 'inquilino' && serviceType === 'votacion') {
-            isAllowed = false;
+        // Lógica de Roles
+        if (isConserje) {
+            // Conserje solo ve Intercom, Bazar y Proveedores
+            const allowedForConserje = ['intercom', 'bazar', 'proveedores'];
+            if (!allowedForConserje.includes(serviceType)) {
+                isHidden = true;
+            }
+        } else if (userType === 'propietario' || userType === 'inquilino') {
+            // Residentes no usan el Intercom (es herramienta de portería)
+            if (serviceType === 'intercom') {
+                isConserjeOnly = true;
+                isAllowed = false;
+            }
+            // Inquilinos no votan
+            if (userType === 'inquilino' && serviceType === 'votacion') {
+                isAllowed = false;
+            }
+        }
+
+        // Aplicar Visibilidad
+        if (isHidden) {
+            card.classList.add('hidden-role');
+            return;
+        } else {
+            card.classList.remove('hidden-role');
+        }
+
+        // Aplicar estado "Solo Conserje" (Tooltip CSS)
+        if (isConserjeOnly) {
+            card.classList.add('conserje-only');
+            card.classList.remove('blocked');
+            const overlay = card.querySelector('.lock-overlay');
+            if (overlay) overlay.style.display = 'none';
+            card.onclick = null;
+            return;
+        } else {
+            card.classList.remove('conserje-only');
         }
 
         if (isAllowed) {
@@ -274,6 +319,8 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openProveedoresModule();
                 } else if (serviceType === 'transparencia') {
                     openTransparencyModule();
+                } else if (serviceType === 'intercom' && (isConserje || isAdmin)) {
+                    window.open('https://intercomweb2026.streamlit.app/', '_blank');
                 } else {
                     if (elements.modals.access) {
                         elements.modals.access.classList.add('active');
@@ -284,16 +331,17 @@ function applyUserPermissions(data, isNewLogin = false) {
         } else {
             card.classList.add('blocked');
             card.onclick = () => {
-                if (serviceType === 'votacion') {
-                    showSuttleMessage('Esta sección es exclusiva para Propietarios acreditados');
-                }
+                const msg = (serviceType === 'votacion')
+                    ? 'Esta sección es exclusiva para Propietarios acreditados'
+                    : 'Acceso restringido para su perfil';
+                showSuttleMessage(msg);
             };
         }
     });
 
     if (elements.buttons.btnOpenVoting) {
         elements.buttons.btnOpenVoting.onclick = () => {
-            if (data.tipo?.toLowerCase() === 'propietario' || data.tipo?.toLowerCase() === 'administración' || data.tipo?.toLowerCase() === 'adm') {
+            if (data.tipo?.toLowerCase() === 'propietario' || isAdmin) {
                 openVotingModule();
             } else {
                 showSuttleMessage('Esta sección es exclusiva para Propietarios acreditados');
