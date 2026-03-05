@@ -1,0 +1,107 @@
+/* 
+  Admin Dashboard - Gestión de Tickets
+  Residencial Esmeralda
+*/
+
+.admin-modal {
+    max-width: 1000px !important;
+    width: 95% !important;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.ticket-table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.ticket-table th {
+    background: #f1f5f9;
+    padding: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ticket-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.ticket-table tr:hover {
+    background: #f8fafc;
+}
+
+/* Badges de Estado */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.badge-pending {
+    background: #fff7ed;
+    color: #ea580c;
+    /* Naranja fuerte / Rojo suave */
+    border: 1px solid #ffedd5;
+}
+
+.badge-resolved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Botones de Acción */
+.btn-resolve {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-resolve:hover {
+    background: var(--color-primary-dark);
+    transform: scale(1.05);
+}
+
+.btn-resolve:disabled {
+    background: #e2e8f0;
+    cursor: default;
+    transform: none;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 20px;
+    font-weight: 600;
+    color: var(--color-primary);
+}

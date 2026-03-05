@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="css/proveedores.css">
     <link rel="stylesheet" href="css/reportes.css">
     <link rel="stylesheet" href="css/eventos_reclamos.css">
+    <link rel="stylesheet" href="css/admin_dashboard.css">
 </head>
 
 <body>
@@ -89,7 +90,7 @@
 
 
                     <div class="cta-group">
-                        <a href="#distrito" class="btn-main">Explorar Portal</a>
+                        <a href="#distrito" class="btn-main">Más información...</a>
                     </div>
                 </div>
 
@@ -1014,8 +1015,21 @@
                 <div style="padding: 40px 20px; text-align: center;">
                     <span style="font-size: 3rem; display: block; margin-bottom: 20px;">👤</span>
                     <h3 style="margin-bottom: 10px;">Próximamente: Gestión de Perfil</h3>
-                    <p style="color: #64748b; font-size: 0.9rem;">Aquí podrás actualizar tu foto, celular y preferencias
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 30px;">Aquí podrás actualizar tu foto,
+                        celular y preferencias
                         de notificación.</p>
+
+                    <!-- Zona Administrativa (Solo visible para Admin/Super) -->
+                    <div id="adminActionsContainer"
+                        style="display: none; border-top: 1px solid #f1f5f9; padding-top: 30px; margin-top: 20px;">
+                        <span class="eyebrow" style="color: var(--color-primary);">Acciones de Control</span>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">Acceso exclusivo para el
+                            equipo de gestión.</p>
+                        <button class="btn-main btn-full" id="btnOpenAdminPanel"
+                            style="background: var(--color-primary);">
+                            🛡️ Abrir Panel de Administración
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1037,6 +1051,46 @@
                 </div>
                 <div class="gatekeeper-footer">
                     <a href="#" class="help-link">¿No tienes tu código? Contacta a Administración</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GESTIÓN DE TICKETS (ADMIN) -->
+    <div id="modalAdminTickets" class="modal-overlay full-modal">
+        <div class="modal-container admin-modal">
+            <button class="modal-close" id="closeAdminTickets">&times;</button>
+            <div class="admin-header">
+                <div>
+                    <span class="eyebrow">Oficina Virtual</span>
+                    <h2>Panel de Administración de Tickets</h2>
+                </div>
+                <div class="admin-stats" id="adminStats">
+                    <!-- Estadísticas rápidas -->
+                </div>
+            </div>
+
+            <div class="ticket-table-container">
+                <table class="ticket-table" id="adminTableTickets">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Vecino / Dpto</th>
+                            <th>Categoría</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAdminTickets">
+                        <!-- JS Render -->
+                    </tbody>
+                </table>
+                <div id="adminNoData" class="no-data" style="display: none;">
+                    No hay tickets registrados actualmente.
+                </div>
+                <div id="adminLoading" class="loading-spinner">
+                    Cargando reportes de Supabase...
                 </div>
             </div>
         </div>

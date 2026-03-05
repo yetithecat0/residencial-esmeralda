@@ -124,7 +124,8 @@ function initDOMElements() {
             transparency: document.getElementById('modalTransparency'),
             account: document.getElementById('modalAccount'),
             events: document.getElementById('modalEvents'),
-            tickets: document.getElementById('modalTickets')
+            tickets: document.getElementById('modalTickets'),
+            adminTickets: document.getElementById('modalAdminTickets')
         },
         buttons: {
             openLogin: document.getElementById('openModal'),
@@ -137,9 +138,11 @@ function initDOMElements() {
             closeAccount: document.getElementById('closeAccount'),
             closeEvents: document.getElementById('closeEvents'),
             closeTickets: document.getElementById('closeTickets'),
+            closeAdminTickets: document.getElementById('closeAdminTickets'),
             unlock: document.getElementById('unlockGatekeeper'),
             logout: document.getElementById('logoutBtn'),
-            btnOpenVoting: document.getElementById('btnOpenVoting')
+            btnOpenVoting: document.getElementById('btnOpenVoting'),
+            btnOpenAdminPanel: document.getElementById('btnOpenAdminPanel')
         },
         ui: {
             welcomeTitle: document.getElementById('welcomeTitle'),
@@ -150,7 +153,8 @@ function initDOMElements() {
             serviceCards: document.querySelectorAll('.service-card'),
             bazarGrid: document.getElementById('bazarGrid'),
             bazarSearch: document.getElementById('bazarSearchInput'),
-            claimForm: document.getElementById('claimForm')
+            claimForm: document.getElementById('claimForm'),
+            adminActions: document.getElementById('adminActionsContainer')
         }
     };
 }
@@ -227,7 +231,7 @@ function applyUserPermissions(data, isNewLogin = false) {
     const isSuper = userType === 'super';
 
     // Saludo Personalizado
-    let welcomeText = isAdmin ? '¡Bienvenido, Administrador Esmeralda!' : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
+    let welcomeText = isAdmin ? `Hola, ${data.nombre} - Administración` : `¡Hola, ${data.nombre} (Dpto ${data.depto})!`;
     if (isConserje) welcomeText = `Hola, ${data.nombre} - Conserje`;
     if (isSuper) welcomeText = `Hola, ${data.nombre} - Desarrollador`;
 
@@ -270,23 +274,23 @@ function applyUserPermissions(data, isNewLogin = false) {
             // Super tiene acceso total
             isAllowed = true;
             isHidden = false;
+        } else if (isAdmin) {
+            // Admin tiene acceso a todo + Gestión de Tickets
+            isAllowed = true;
+            isHidden = false;
         } else if (isConserje) {
-            // Conserje solo ve lo operativo + eventos + reclamos (aunque deshabilitado)
-            const allowedForConserje = ['intercom', 'bazar', 'proveedores', 'eventos', 'reclamos'];
+            // Conserje solo ve Intercom, Bazar y Proveedores
+            const allowedForConserje = ['intercom', 'bazar', 'proveedores'];
             if (!allowedForConserje.includes(serviceType)) {
                 isHidden = true;
+                isAllowed = false;
             }
-            if (serviceType === 'reclamos') {
+        } else {
+            // Vecinos (Propietario/Inquilino)
+            if (serviceType === 'intercom') {
                 isConserjeOnlyRestriction = true;
                 isAllowed = false;
             }
-        } else if (userType === 'propietario' || userType === 'inquilino') {
-            // Residentes no usan el Intercom
-            if (serviceType === 'intercom') {
-                isConserjeOnlyRestriction = true; // Mostramos el mismo estilo de "Portería"
-                isAllowed = false;
-            }
-            // Inquilinos no votan
             if (userType === 'inquilino' && serviceType === 'votacion') {
                 isAllowed = false;
             }
@@ -342,6 +346,8 @@ function applyUserPermissions(data, isNewLogin = false) {
                     openEventsModule();
                 } else if (serviceType === 'reclamos') {
                     openTicketsModule();
+                } else if (serviceType === 'admin-tickets') {
+                    openAdminTicketsModule();
                 } else if (serviceType === 'intercom' && (isConserje || isSuper || isAdmin)) {
                     window.open('https://intercomweb2026.streamlit.app/', '_blank');
                 } else {
@@ -359,6 +365,18 @@ function applyUserPermissions(data, isNewLogin = false) {
             };
         }
     });
+
+    // Control del Panel Administrativo en el modal Mi Cuenta
+    if (elements.ui.adminActions) {
+        elements.ui.adminActions.style.display = (isAdmin || isSuper) ? 'block' : 'none';
+    }
+
+    if (elements.buttons.btnOpenAdminPanel) {
+        elements.buttons.btnOpenAdminPanel.onclick = () => {
+            if (elements.modals.account) elements.modals.account.classList.remove('active');
+            openAdminTicketsModule();
+        };
+    }
 
     if (elements.buttons.btnOpenVoting) {
         elements.buttons.btnOpenVoting.onclick = () => {
@@ -499,25 +517,160 @@ function openTicketsModule() {
     }
 }
 
-function handleTicketSubmission(e) {
+async function handleTicketSubmission(e) {
     e.preventDefault();
     const type = document.getElementById('ticketType').value;
     const desc = document.getElementById('ticketDesc').value;
 
-    if (!type || !desc) return;
+    // Obtener datos del usuario logueado
+    const loggedUser = JSON.parse(localStorage.getItem('vecino_logueado'));
 
-    // Generar ticket aleatorio
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const ticketID = `#RE-${randomNum}`;
+    if (!type || !desc || !loggedUser) {
+        showSuttleMessage('Error al procesar el reporte. Intente de nuevo.');
+        return;
+    }
 
-    // Simular envío
-    document.getElementById('ticketFormContainer').style.display = 'none';
-    const successDiv = document.getElementById('ticketSuccess');
-    successDiv.style.display = 'block';
-    document.getElementById('ticketGeneratedNumber').textContent = ticketID;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+    }
 
-    console.log(`Ticket Generado: ${ticketID} | Tipo: ${type} | Desc: ${desc}`);
+    try {
+        const { error } = await supabaseClient
+            .from('tickets_soporte')
+            .insert([
+                {
+                    vecino_id: loggedUser.id,
+                    tipo_incidencia: type,
+                    descripcion: desc,
+                    estado: 'Pendiente'
+                }
+            ]);
+
+        if (error) throw error;
+
+        // Éxito
+        showSuttleMessage('¡Reporte recibido! Administración atenderá su inquietud a la brevedad.');
+
+        // Limpiamos y cerramos
+        if (elements.ui.claimForm) elements.ui.claimForm.reset();
+
+        setTimeout(() => {
+            if (elements.modals.tickets) {
+                elements.modals.tickets.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }, 1500);
+
+    } catch (err) {
+        console.error('Error al enviar ticket:', err);
+        showSuttleMessage('Hubo un error al enviar el reporte. Intente más tarde.');
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Enviar Reporte';
+        }
+    }
 }
+
+/**
+ * Módulo Administrativo de Tickets
+ */
+async function openAdminTicketsModule() {
+    if (elements.modals.access) elements.modals.access.classList.remove('active');
+    if (elements.modals.adminTickets) {
+        elements.modals.adminTickets.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        fetchAndRenderAdminTickets();
+    }
+}
+
+async function fetchAndRenderAdminTickets() {
+    const tbody = document.getElementById('tbodyAdminTickets');
+    const loading = document.getElementById('adminLoading');
+    const noData = document.getElementById('adminNoData');
+
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    loading.style.display = 'block';
+    noData.style.display = 'none';
+
+    try {
+        // 1. Obtener todos los tickets ordenados por fecha desc
+        const { data: tickets, error: tError } = await supabaseClient
+            .from('tickets_soporte')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (tError) throw tError;
+
+        if (!tickets || tickets.length === 0) {
+            loading.style.display = 'none';
+            noData.style.display = 'block';
+            return;
+        }
+
+        // 2. Obtener todos los vecinos para hacer el "join" manual
+        const { data: vecinos, error: vError } = await supabaseClient
+            .from('directorio_final')
+            .select('id, nombre, depto');
+
+        if (vError) throw vError;
+
+        // 3. Renderizar
+        loading.style.display = 'none';
+
+        tickets.forEach(ticket => {
+            const vecino = vecinos.find(v => v.id === ticket.vecino_id) || { nombre: 'Desconocido', depto: 'N/A' };
+            const date = new Date(ticket.created_at).toLocaleString();
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${date}</td>
+                <td><strong>${vecino.nombre}</strong><br><small>Dpto ${vecino.depto}</small></td>
+                <td>${ticket.tipo_incidencia}</td>
+                <td>${ticket.descripcion}</td>
+                <td>
+                    <span class="badge ${ticket.estado === 'Resuelto' ? 'badge-resolved' : 'badge-pending'}">
+                        ${ticket.estado}
+                    </span>
+                </td>
+                <td>
+                    ${ticket.estado === 'Pendiente'
+                    ? `<button class="btn-resolve" onclick="updateTicketStatus('${ticket.id}')">Atender</button>`
+                    : '✅'}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+    } catch (err) {
+        console.error('Error admin tickets:', err);
+        loading.innerHTML = 'Error al cargar datos.';
+    }
+}
+
+async function updateTicketStatus(ticketID) {
+    try {
+        const { error } = await supabaseClient
+            .from('tickets_soporte')
+            .update({ estado: 'Resuelto' })
+            .eq('id', ticketID);
+
+        if (error) throw error;
+
+        showSuttleMessage('Ticket marcado como Atendido');
+        fetchAndRenderAdminTickets(); // Refresh
+    } catch (err) {
+        console.error('Error updating ticket:', err);
+        showSuttleMessage('Error al actualizar estado.');
+    }
+}
+
+// Inyectar al objeto global para botones dinámicos
+window.updateTicketStatus = updateTicketStatus;
 
 /**
  * Muestra un mensaje sutil
@@ -652,7 +805,8 @@ function setupEventListeners() {
         { btn: buttons.closeTransparency, modal: modals.transparency },
         { btn: buttons.closeAccount, modal: modals.account },
         { btn: buttons.closeEvents, modal: modals.events },
-        { btn: buttons.closeTickets, modal: modals.tickets }
+        { btn: buttons.closeTickets, modal: modals.tickets },
+        { btn: buttons.closeAdminTickets, modal: modals.adminTickets }
     ];
 
     closeMapping.forEach(item => {
